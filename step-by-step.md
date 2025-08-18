@@ -16,3 +16,5 @@ Auth
    [] - refresh token
 [] - Criar testes unitarios
 [] - Criar repositorio prisma
+
+https://medium.com/nestjs-ninja/creating-a-configuration-module-like-a-specialist-with-zod-inside-nestjs-c61430de896b

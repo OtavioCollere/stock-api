@@ -1,4 +1,5 @@
 import { Entity } from "@/store/core/entities/entity"
+import type { UniqueEntityID } from "@/store/core/entities/unique-entity-id"
 import type { Optional } from "@/store/core/types/optional"
 
 
@@ -17,13 +18,14 @@ export interface UserProps {
 
 export class User extends Entity<UserProps> {
 
-  static create(props : Optional<UserProps, 'createdAt' | 'updatedAt' | 'emailVerified'>, id? : string) {
+  static create(props : Optional<UserProps, 'createdAt' | 'updatedAt' | 'emailVerified'>, id? : UniqueEntityID) {
     
     const user = new User({
+      ...props,
       emailVerified : false,
       createdAt : new Date(),
-      ...props,
-    }, id)
+    }, 
+    id)
 
     return user;
   }

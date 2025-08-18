@@ -10,7 +10,7 @@
     },
     "noEmit": true,
     "lib": [
-      "es2024",
+      "es2022",
       "ESNext.Array",
       "ESNext.Collection",
       "ESNext.Iterator"
@@ -20,6 +20,9 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "moduleResolution": "node16"
+    "moduleResolution": "node16",
+    "types": [
+      "vitest/globals"
+    ]
   }
 }
