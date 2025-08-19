@@ -1,9 +1,9 @@
 import { makeLeft, makeRight, type Either } from "@/store/core/either/either";
 import { WrongCredentialsError } from "@/store/core/errors/wrong-credentials-error";
-import { Injectable } from "@nestjs/common";
-import type { UsersRepository } from "../../repositories/users-repository";
-import type { HashComparer } from "../../cryptography/hash-comparer";
-import type { Encrypter } from "../../cryptography/encrypter";
+import { UsersRepository } from "../../repositories/users-repository";
+import { HashComparer } from "../../cryptography/hash-comparer";
+import { Encrypter } from "../../cryptography/encrypter";
+import { Inject, Injectable } from "@nestjs/common";
 
 interface RegisterUserUseCaseRequest {
   email: string
@@ -18,6 +18,7 @@ WrongCredentialsError,
 }
 >
 
+@Injectable()
 export class AuthenticateUseCase{
 
   constructor(
@@ -30,7 +31,7 @@ export class AuthenticateUseCase{
 
     const user = await this.usersRepository.findByEmail(email);
 
-    if(!user) {
+    if(!user) {      
       return makeLeft(new WrongCredentialsError())
     }
 
@@ -45,7 +46,7 @@ export class AuthenticateUseCase{
       role: user.role,
     })
     
-    const refreshToken = await this.encrypter.sign({
+    const refreshToken = await this.encrypter.signRefreshToken({
       sub: user.id.toString(),
       role: user.role,
     })

@@ -1,5 +1,5 @@
 import { UniqueEntityID } from "@/store/core/entities/unique-entity-id";
-import type { User } from "@/store/domain/enterprise/entities/user";
+import { User } from "@/store/domain/enterprise/entities/user";
 import { User as PrismaUser, Prisma } from "@prisma/client"; 
 
 export class PrismaUsersMapper{
@@ -14,6 +14,8 @@ export class PrismaUsersMapper{
         birthDate : raw.birthDate,
         emailVerified : raw.emailVerified
       }, new UniqueEntityID(raw.id))
+
+      return user
     }
 
 
@@ -26,7 +28,10 @@ export class PrismaUsersMapper{
         password : user.password,
         role : user.role,
         phone : user.phone,
-        birthDate : user.birthDate,
+        birthDate:
+        user.birthDate instanceof Date
+          ? user.birthDate
+          : new Date(user.birthDate), 
         emailVerified : user.emailVerified
       }
     }

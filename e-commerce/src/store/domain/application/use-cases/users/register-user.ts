@@ -6,6 +6,7 @@ import { CpfAlreadyExistsError } from "@/store/core/errors/cpf-already-exists-er
 import { CpfValidator } from "../../gateways/cpf-validator"
 import { CpfIsNotValidError } from "@/store/core/errors/cpf-is-not-valid-error"
 import { HashGenerator } from "../../cryptography/hash-generator"
+import { Injectable } from "@nestjs/common"
 
 export interface RegisterUserUseCaseRequest {
   name: string
@@ -24,6 +25,7 @@ EmailAlreadyExistsError,
 }
 >
 
+@Injectable()
 export class RegisterUserUseCase{
 
   constructor(

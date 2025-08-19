@@ -2,6 +2,8 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "_version": "22.0.0",
   "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "baseUrl": ".",
     "paths": {
       "@/*": [
