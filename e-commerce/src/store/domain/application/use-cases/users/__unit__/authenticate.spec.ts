@@ -3,29 +3,30 @@ import {it, describe, expect} from 'vitest'
 import { isLeft, isRight, unwrapEither } from '@/store/core/either/either'
 import { makeUser } from 'test/factories/make-user'
 import { AuthenticateUseCase } from '../authenticate'
-import { HashComparer } from '../../../cryptography/hash-comparer'
-import { Encrypter } from '../../../cryptography/encrypter'
 import { FakeHasher } from 'test/cryptography/fake-hasher'
+import { FakeEncrypter } from 'test/cryptography/fake-encrypter'
 
 describe("Authenticate User Unit Tests", () => {
   
   let inMemoryUsersRepository : InMemoryUsersRepository
   let fakeHasher : FakeHasher
-  let encrypter : FakeEncrypter
+  let fakeEncrypter : FakeEncrypter
   let sut : AuthenticateUseCase
 
   beforeEach(() => {
     inMemoryUsersRepository = new InMemoryUsersRepository();
     fakeHasher = new FakeHasher();
-    sut = new AuthenticateUseCase(inMemoryUsersRepository, fakeHasher, encrypter)
+    fakeEncrypter = new FakeEncrypter();
+    sut = new AuthenticateUseCase(inMemoryUsersRepository, fakeHasher, fakeEncrypter)
   })
 
   it("should be able to authenticate user", async () => {
 
     const user = makeUser({
       email : 'otaviosk59@gmail.com',
-      password : await fakeHasher.hash('1234')
+      password : await fakeHasher.hash('1234', 8)
     })
+    inMemoryUsersRepository.items.push(user)
 
     const result = await sut.execute({
       email : 'otaviosk59@gmail.com',
@@ -35,9 +36,10 @@ describe("Authenticate User Unit Tests", () => {
     expect(isRight(result)).toBeTruthy()
     if(isRight(result))
     {
-      expect(inMemoryUsersRepository.items[0].email).toEqual('otaviosk59@gmail.com')
-      expect(inMemoryUsersRepository.items[0].password).toEqual('1234-hashed')
-      expect(unwrapEither(result).user.name).toEqual('Otavio')
+      expect(unwrapEither(result)).toEqual({
+        access_token : expect.any(String),
+        refresh_token : expect.any(String)
+      })
     }
 
   })  

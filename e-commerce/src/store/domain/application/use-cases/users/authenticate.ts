@@ -18,7 +18,6 @@ WrongCredentialsError,
 }
 >
 
-@Injectable()
 export class AuthenticateUseCase{
 
   constructor(
