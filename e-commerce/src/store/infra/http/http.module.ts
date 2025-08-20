@@ -9,6 +9,7 @@ import { DatabaseModule } from "../database/database.module";
 import { AuthenticateController } from "./controllers/users/authenticate-user";
 import { AuthenticateUseCase } from "@/store/domain/application/use-cases/users/authenticate";
 
+
 @Module({
   imports: [DatabaseModule, AuthModule, CryptographyModule, GatewaysModule],
   exports: [PrismaService],
