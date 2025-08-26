@@ -1,108 +1,128 @@
-import { RegisterUserUseCase } from "@/store/domain/application/use-cases/users/register-user";
-import { BadRequestException, Body, ConflictException, Controller, HttpCode, Post, UsePipes } from "@nestjs/common";
-import z from "zod";
-import { ZodPipe } from "../../pipes/zod-validation-pipe";
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { isLeft, unwrapEither } from "@/store/core/either/either";
-import { EmailAlreadyExistsError } from "@/store/core/errors/email-already-exists-error";
-import { CpfIsNotValidError } from "@/store/core/errors/cpf-is-not-valid-error";
+import {
+  BadRequestException,
+  Body,
+  ConflictException,
+  Controller,
+  HttpCode,
+  Post,
+  UsePipes,
+} from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiConflictResponse,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
+import z from 'zod';
+import { ZodPipe } from '../../pipes/zod-validation-pipe';
+import { isLeft, unwrapEither } from '@/store/core/either/either';
+import { RegisterUserUseCase } from '@/store/domain/application/use-cases/users/register-user';
+import { EmailAlreadyExistsError } from '@/store/core/errors/email-already-exists-error';
+import { CpfIsNotValidError } from '@/store/core/errors/cpf-is-not-valid-error';
+import { CpfAlreadyExistsError } from '@/store/core/errors/cpf-already-exists-error';
+
+const PASSWORD_MIN = 12;
 
 const registerUserBodySchema = z.object({
-  name: z.string(),
-  cpf: z.string().length(11, "CPF must have exactly 11 digits"),
-  email: z.email(),
-  password: z.string(),
-  role: z.enum(["customer", "seller"]),
-  phone: z.string().length(11, "Phone number must have exactly 11 digits"),
-  birthDate: z.coerce.date(), // aceita string (ex: "2000-01-01") e converte p/ Date
+  name: z.string().min(1),
+  cpf: z.string().regex(/^\d{11}$/, 'CPF must have exactly 11 digits'),
+  email: z.string().email(),
+  password: z.string().min(PASSWORD_MIN),
+  role: z.enum(['customer', 'seller']),
+  phone: z.string().regex(/^\d{11}$/, 'Phone number must have exactly 11 digits'),
+  birthDate: z.coerce.date(), // aceita "2000-01-01"
 });
 
-type RegisterUserBodySchema = z.infer<typeof registerUserBodySchema>
+type RegisterUserBodySchema = z.infer<typeof registerUserBodySchema>;
 
 @Controller('/users')
 @ApiTags('Auth')
-export class RegisterUserController{
+export class RegisterUserController {
+  constructor(private registerUser: RegisterUserUseCase) {}
 
-  constructor(private registerUser : RegisterUserUseCase ) {}
-
-  @ApiOperation({summary : 'Register a new user'})
+  @ApiOperation({ summary: 'Register a new user' })
   @Post()
   @UsePipes(new ZodPipe(registerUserBodySchema))
-
   @ApiBody({
-    description : 'User Registration Data', 
-    schema : {
-      type : 'object',
-      properties : {
-        name: { type: 'string', minLength: 1 },
-        email: { type: 'string', format: 'email' },
-        cpf: { type: 'string', pattern: '^[0-9]{11}$' },       
-        password: { type: 'string', minLength: 20 },          
-        role: { type: 'string', enum: ['customer', 'seller'] },
-        phone: { type: 'string', pattern: '^[0-9]{11}$' },      
-        birthDate: { type: 'string', format: 'date' }  
-      }, 
-      required : ['name', 'email', 'password', 'role', 'phone', 'birthDate']
-    }
+    description: 'User Registration Data',
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', minLength: 1, example: 'Maria Silva' },
+        email: { type: 'string', format: 'email', example: 'maria@example.com' },
+        cpf: { type: 'string', pattern: '^[0-9]{11}$', example: '12345678901' },
+        password: { type: 'string', minLength: PASSWORD_MIN, example: 'Str0ngP@ssw0rd!' },
+        role: { type: 'string', enum: ['customer', 'seller'], example: 'customer' },
+        phone: { type: 'string', pattern: '^[0-9]{11}$', example: '11987654321' },
+        birthDate: { type: 'string', format: 'date', example: '2000-01-01' },
+      },
+      required: ['name', 'email', 'cpf', 'password', 'role', 'phone', 'birthDate'],
+    },
   })
-
-  @ApiResponse({
-    status : 201,
-    description: 'User created sucessfully',
-    schema : {
-      example : {
-        user : {id : 'uuid'}
-      }
-    }
+  @ApiCreatedResponse({
+    description: 'User created successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        user: {
+          type: 'object',
+          properties: { id: { type: 'string', description: 'User ID' } },
+          required: ['id'],
+        },
+      },
+      example: { user: { id: 'a3f1b0f8-8c3e-4a9f-98a2-2a8c4e9c1234' } },
+    },
   })
-
-  @ApiResponse({
-    status : 409,
-    description: 'Email already exists ( Conflict Exception )',
+  @ApiConflictResponse({
+    description: 'Email or CPF already exists',
+    schema: {
+      example: {
+        statusCode: 409,
+        message: 'Email already exists',
+        error: 'Conflict',
+      },
+    },
   })
-
-  @ApiResponse({
-    status: 400,
-    description: 'CPF is not valid - external API returned false',
+  @ApiBadRequestResponse({
+    description: 'Validation error (Zod) or invalid CPF from external validator',
+    schema: {
+      example: {
+        statusCode: 400,
+        message: ['CPF must have exactly 11 digits'],
+        error: 'Bad Request',
+      },
+    },
   })
+  @HttpCode(201) // redundante, mas explícito
+  async handle(@Body() body: RegisterUserBodySchema) {
+    const { name, cpf, email, phone, role, birthDate, password } = body;
 
-  @HttpCode(201)
-  async handle(@Body() body : RegisterUserBodySchema) {
-
-    const { name, cpf, email, phone, role, birthDate, password
-     } = body;
-
-     const result = await this.registerUser.execute({
+    const result = await this.registerUser.execute({
       name,
       cpf,
       email,
       phone,
       role,
       birthDate,
-      password
-     })
+      password,
+    });
 
-     if(isLeft(result))
-     {
-      const error = unwrapEither(result)
-
-      switch(error.constructor)
-      {
+    if (isLeft(result)) {
+      const error = unwrapEither(result);
+      switch (error.constructor) {
         case EmailAlreadyExistsError:
-          throw new ConflictException(error.message)
+        case CpfAlreadyExistsError:
+          throw new ConflictException(error.message);
         case CpfIsNotValidError:
-          throw new BadRequestException(error.message)
-        default :
-          throw new BadRequestException()      
+          throw new BadRequestException(error.message);
+        default:
+          throw new BadRequestException();
       }
+    }
 
-     }
-
-     const sub = unwrapEither(result).user.id.toString()
-
-     return {
-      user: { id : sub}
-     }
-
+    const sub = unwrapEither(result).user.id.toString();
+    return { user: { id: sub } };
   }
 }

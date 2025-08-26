@@ -8,8 +8,6 @@ import type { UsersRepository } from "../../repositories/users-repository";
 import type { CategorysRepository } from "../../repositories/categorys-repository";
 import { UniqueEntityID } from "@/store/core/entities/unique-entity-id";
 
-
-
 interface RegisterProductUseCaseRequest{
   name : string
   productCode? : string

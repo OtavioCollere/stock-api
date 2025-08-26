@@ -32,12 +32,14 @@ export class AuthenticateUseCase{
     const user = await this.usersRepository.findByEmail(email);
 
     if(!user) {      
+      console.log("nao encontrou user")
       return makeLeft(new WrongCredentialsError())
     }
 
     const doesPasswordMatch = await this.hashComparer.compare(password, user.password);
 
     if(!doesPasswordMatch) {
+      console.log("nao validou a senha")
       return makeLeft(new WrongCredentialsError())
     }
 

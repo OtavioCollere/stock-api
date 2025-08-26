@@ -2,20 +2,6 @@ import { Entity } from "@/store/core/entities/entity"
 import type { UniqueEntityID } from "@/store/core/entities/unique-entity-id"
 import type { Optional } from "@prisma/client/runtime/library"
 
-// Product
-// - name
-// - productCode
-// - description 
-// - quantity
-// - currentPrice
-// - status ( active - archived )
-// - categoryId
-// - createdByUserId
-// - updateByUserId ( so vai atualizar quando mexer em name/quantity/price )
-// - createdAt 
-// - updatedAt
-// - images ( futuramente )
-
 export interface ProductProps{
   categoryId : UniqueEntityID
   createdByUserId : UniqueEntityID
@@ -58,6 +44,10 @@ export class Product extends Entity<ProductProps> {
   // ===================
   // Getters
   // ===================
+  get slug(){
+    return this.props.slug
+  }
+  
   get categoryId() {
     return this.props.categoryId
   }
@@ -83,9 +73,8 @@ export class Product extends Entity<ProductProps> {
     return this.props.productCode
   }
 
-
   get description() {
-    return this.props.description?
+    return this.props.description ?? "Sem descrição";
   }
 
   get quantity() {
@@ -141,7 +130,7 @@ export class Product extends Entity<ProductProps> {
     this.touch()
   }
 
-  activate(userId: UniqueEntityID) {
+  public activate(userId: UniqueEntityID) {
     this.props.status = 'active'
     this.props.updatedByUserId = userId
     this.touch()

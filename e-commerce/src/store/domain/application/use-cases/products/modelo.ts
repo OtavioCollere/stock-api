@@ -1,21 +1,21 @@
-import type { Either } from "@/store/core/either/either";
-import type { ProductsRepository } from "../../repositories/products-repository";
+// import type { Either } from "@/store/core/either/either";
+// import type { ProductsRepository } from "../../repositories/products-repository";
 
 
 
-interface RegisterProductUseCaseRequest{
+// interface RegisterProductUseCaseRequest{
 
-}
+// }
 
-type RegisterProductUseCaseResponse = Either<
+// type RegisterProductUseCaseResponse = Either<
 
->
+// >
 
-export class RegisterProductUseCase{
+// export class RegisterProductUseCase{
 
-  constructor(private productsRepository : ProductsRepository) {}
+//   constructor(private productsRepository : ProductsRepository) {}
 
-  async execute({} : RegisterProductUseCaseRequest) : Promise<RegisterProductUseCaseResponse> {
+//   async execute({} : RegisterProductUseCaseRequest) : Promise<RegisterProductUseCaseResponse> {
 
-  }
-}
+//   }
+// }
