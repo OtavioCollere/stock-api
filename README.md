@@ -1,120 +1,57 @@
-# e-commerce-api
-Nest, JWT, google and Gov integration 
+# Stock API
 
+Este é um projeto em desenvolvimento que visa criar uma API para Controle de estoque utilizando **NestJS**, **JWT**, **Google e integração com o Governo**, seguindo práticas modernas de **Arquitetura Limpa**, **DDD** e **Microserviços**.
 
-# 📅 Plano de Transição para Node.js (Agosto - Outubro)
+## Funcionalidades Implementadas
 
-## ✅ 1. Conteúdos Teóricos para Estudar (com foco em entrevistas)
+- **Autenticação e Registro de Usuário com JWT RS256**  
+  Implementação de autenticação utilizando chave privada e pública (RS256) para autenticar e registrar usuários.
+  
+- **Registro de Usuário com Criptografia de Senha**  
+  Senhas dos usuários são criptografadas utilizando **bcrypt**, e o registro é validado utilizando **RBAC (Role-Based Access Control)**.
+  
+- **Registro de Produto**  
+  Endpoint para registrar produtos com a validação de autenticação usando **AuthGuard** para garantir que apenas usuários autenticados possam realizar esta ação.
 
-### 🔹 Base técnica (saber explicar com clareza)
+- **Validação de CPF via API de Integração**  
+  Ao registrar um usuário, a validação do CPF é realizada por meio de uma integração com uma API externa para garantir que o CPF informado seja válido.
 
-- [ ] **SOLID Principles**
-  - Explicar cada princípio
-  - Aplicações práticas em Node.js
-  - Vantagens e exemplos reais
+- **Testes Unitários e E2E**  
+  Utilização de **Vitest** para escrever testes unitários e de integração (E2E) para garantir a qualidade e o correto funcionamento da aplicação.
 
-- [ ] **Clean Architecture + DDD**
-  - Conceito de camadas (entidades, casos de uso, adaptadores, etc.)
-  - Responsabilidade de cada camada
-  - Comunicação entre camadas
-  - Benefícios e limitações
+## Objetivo Final do Projeto
 
-- [ ] **Testes (Vitest, etc.)**
-  - Tipos de testes (unitário, integração, E2E)
-  - Quando usar mocks
-  - Importância de cobertura x qualidade
-  - Como testar regras de negócio em Clean Arch
+O projeto visa a construção de uma aplicação de controle de estoque com as seguintes funcionalidades, ainda em desenvolvimento:
 
-- [ ] **Documentação com Swagger**
-  - Documentar endpoints REST
-  - Respostas de erro e validação
-  - OpenAPI 3.0 - boas práticas
+- **Autenticação e Registro de Usuários**
+- **Cadastro de Produtos**
+- **Gestão de Baixas e Adições de Estoque**
+- **Entidade para Baixas e Adições**
+- **Regras de Negócio na Camada Mais Pura Utilizando DDD**
+- **Abstrações e Implementações Limpa com Arquitetura Limpa**
 
-- [ ] **Boas práticas gerais**
-  - Git: branches, commits, PRs
-  - Code Review: como fazer e receber
-  - CI/CD básico com GitHub Actions
+## Tecnologias Utilizadas
 
----
+- **NestJS** - Framework para construção de APIs
+- **JWT (RS256)** - Autenticação utilizando JSON Web Tokens com chave pública e privada
+- **Google e API de Integração com o Governo** - Para validação de dados, como CPF
+- **Bcrypt** - Criptografia de senhas
+- **Vitest** - Testes unitários e E2E
+- **Grafana** - Logs e práticas de observabilidade
+- **Microserviços** - Notificações e outros serviços em microserviços
+- **Arquitetura Limpa** - Seguindo as melhores práticas de desenvolvimento
+- **DDD (Domain-Driven Design)** - Para organização e gestão de entidades e regras de negócio
 
-### 🔹 Comunicação e performance em entrevistas
+## Arquitetura
 
-- [ ] **Técnica SMART (respostas comportamentais)**
-  - Situação, Missão, Ação, Resultado, Lição
+A aplicação seguirá o padrão de **Clean Architecture**, separando a lógica de negócio, infraestrutura, e frameworks da seguinte forma:
 
-- [ ] **Explicar sua migração de stack**
-  - Foco nos aprendizados e motivos da mudança
-  - Mostrando valor da experiência anterior com PHP
+- **Camada de Domínio**: Entidades e regras de negócio implementadas de forma isolada.
+- **Camada de Aplicação**: Serviços, use-cases e orquestração da aplicação.
+- **Camada de Infraestrutura**: Comunicação com APIs externas, bancos de dados, serviços de autenticação e outros.
 
-- [ ] **Lidar com nervosismo**
-  - Técnicas de respiração
-  - Ter uma introdução pessoal treinada
-  - Praticar com mock interviews
+## Microserviços
 
----
+A aplicação estará dividida em microserviços, permitindo maior escalabilidade, flexibilidade e resiliência. O primeiro microserviço implementado será o de **Notificações**, que será responsável por enviar alertas e notificações aos usuários da plataforma.
 
-## 🚨 2. Como Entrar como Júnior em Node.js (mesmo sem experiência profissional)
-
-### Realidade do Mercado
-- A maioria das vagas “júnior” exigem perfil de pleno.
-- Empresas pequenas ou startups são o melhor caminho.
-- Sua experiência com PHP é **valiosa** — você já resolve problemas reais.
-
-### Caminhos mais realistas:
-- Projetos próprios aplicando Node com qualidade
-- Comunidades técnicas (Discords, eventos, open source)
-- Participar de processos seletivos mesmo para "pleno"
-- Pitch pessoal bem treinado
-- Portfólio técnico no GitHub
-
----
-
-## 🔨 3. Ações práticas para os próximos meses
-
-- [ ] **Criar um projeto real com Node.js**
-  - Clean Architecture + DDD
-  - Swagger
-  - Testes com Vitest
-  - CI/CD com GitHub Actions
-  - Deploy (Render, Vercel, etc.)
-  - README com explicações de arquitetura
-
-- [ ] **Organizar o GitHub**
-  - Repositórios limpos
-  - Commits bem escritos
-  - Documentação clara
-  - Código legível e modular
-
-- [ ] **Montar um pitch técnico**
-  - Exemplo:
-    > "Sou dev com X anos em PHP, lidando com sistema legado complexo. Nos últimos meses, venho focando em Node.js com arquitetura limpa, testes e documentação. Tenho projeto aplicando isso e estou pronto para contribuir com minha base sólida em back-end."
-
-- [ ] **Aplicar em vagas de Node.js**
-  - Mesmo se estiver como "pleno"
-  - Focar em mostrar que você entrega valor
-
-- [ ] **Entrar em comunidades e fazer networking**
-  - Discords, LinkedIn, Dev.to
-  - Participar de meetups ou eventos locais/online
-  - Pedir feedback e praticar entrevistas
-
----
-
-## 🧠 Revisão Semanal (sugestão de domingo)
-
-- O que eu aprendi essa semana?
-- O que funcionou bem?
-- O que pode melhorar?
-- Onde estou travado?
-
----
-
-### 📅 Meta final:
-**Estar pronto para procurar vagas na metade de Outubro com:**
-- Projeto bem feito no GitHub
-- Clareza ao explicar conceitos
-- Pitch pessoal e técnico treinado
-- Aplicações em andamento
-
----
 
