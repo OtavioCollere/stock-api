@@ -3,6 +3,7 @@ import type { ProductsRepository } from "../../repositories/products-repository"
 import { ProductAlreadyExistsError } from "@/store/core/errors/product-already-exists-error";
 import { CategoryNotFoundError } from "@/store/core/errors/category-not-found-error";
 import { UserNotFoundError } from "@/store/core/errors/user-not-found-error";
+import { UserNotAuthorizedError } from "@/store/core/errors/user-not-authorized-error";
 import { Product } from "@/store/domain/enterprise/entities/product";
 import type { UsersRepository } from "../../repositories/users-repository";
 import type { CategorysRepository } from "../../repositories/categorys-repository";
@@ -21,66 +22,66 @@ interface EditProductUseCaseRequest{
 }
 
 type EditProductUseCaseResponse = Either<
-  ProductAlreadyExistsError |  CategoryNotFoundError |  UserNotFoundError,
-  {
-    product: Product
-  }
+  ProductAlreadyExistsError | CategoryNotFoundError | UserNotFoundError | UserNotAuthorizedError,
+  { product: Product }
 >
 
-export class EditProductUseCase{
-
+export class EditProductUseCase {
   constructor(
-    private productsRepository : ProductsRepository,
-    private usersRepository:  UsersRepository,
-    private categoryExists : CategorysRepository
+    private productsRepository: ProductsRepository,
+    private usersRepository: UsersRepository,
+    private categoryExists: CategorysRepository
   ) {}
 
-  async execute({productId, name, productCode, description, quantity, currentPrice, categoryId, updatedByUserId} : EditProductUseCaseRequest) : Promise<EditProductUseCaseResponse> {
-    
-    const product = await this.productsRepository.findById(productId)
+  async execute({
+    productId,
+    name,
+    productCode,
+    description,
+    quantity,
+    currentPrice,
+    categoryId,
+    updatedByUserId
+  }: EditProductUseCaseRequest): Promise<EditProductUseCaseResponse> {
 
+    const product = await this.productsRepository.findById(productId)
     if(!product){
       return makeLeft(new ProductNotFoundError())
     }
 
-    const userExists = await this.usersRepository.findById(updatedByUserId)
-
-    if(!userExists) {
+    const user = await this.usersRepository.findById(updatedByUserId)
+    if(!user){
       return makeLeft(new UserNotFoundError())
     }
 
-    if(name) {
-      const slug = Product.createSlug(name);
+    // **Verificação de autorização**
+    if(user.role !== 'admin' && product.createdByUserId.toString() !== updatedByUserId){
+      return makeLeft(new UserNotAuthorizedError())
+    }
 
-      if(slug) {
-        return makeLeft(new ProductAlreadyExistsError()) 
+    if(name){
+      const slug = Product.createSlug(name)
+      if(slug){
+        return makeLeft(new ProductAlreadyExistsError())
       }
-
-      product.name = name;
+      product.name = name
     }
 
     if(categoryId){
-
-      const categoryExists = await this.categoryExists.findById(categoryId)
-
-      if(categoryExists) {
+      const category = await this.categoryExists.findById(categoryId)
+      if(!category){
         return makeLeft(new CategoryNotFoundError())
       }
-
       product.categoryId = new UniqueEntityID(categoryId)
-
     }
 
-    if (productCode) product.productCode = productCode
-    if (description) product.description = description
-    if (quantity) product.quantity = quantity
-    if (currentPrice) product.currentPrice = currentPrice
+    if(productCode) product.productCode = productCode
+    if(description) product.description = description
+    if(quantity) product.quantity = quantity
+    if(currentPrice) product.currentPrice = currentPrice
 
     await this.productsRepository.save(product)
 
-    return makeRight({
-      product
-    })
-
+    return makeRight({ product })
   }
 }

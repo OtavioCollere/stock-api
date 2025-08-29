@@ -125,9 +125,10 @@ export class Product extends Entity<ProductProps> {
     this.touch();
   }
 
-  archive(userId: UniqueEntityID) {
+  public archive(userId: UniqueEntityID) {
     this.props.status = 'archived'
-    this.touch()
+    this.props.updatedByUserId = userId
+    this.touch();
   }
 
   public activate(userId: UniqueEntityID) {
@@ -135,6 +136,8 @@ export class Product extends Entity<ProductProps> {
     this.props.updatedByUserId = userId
     this.touch()
   }
+
+
 
   // ===================
   // Private helper

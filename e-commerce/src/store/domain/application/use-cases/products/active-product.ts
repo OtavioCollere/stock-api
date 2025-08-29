@@ -7,6 +7,7 @@ import { UserNotFoundError } from "@/store/core/errors/user-not-found-error";
 import { UsersRepository } from "../../repositories/users-repository";
 import { Product } from "@/store/domain/enterprise/entities/product";
 import { UniqueEntityID } from "@/store/core/entities/unique-entity-id";
+import { UserNotAuthorizedError } from "@/store/core/errors/user-not-authorized-error";
 
 interface ActiveProductUseCaseRequest{
   productId : string
@@ -14,7 +15,7 @@ interface ActiveProductUseCaseRequest{
 }
 
 type ActiveProductUseCaseResponse = Either<
-  ProductNotFoundError | UserNotFoundError,
+  ProductNotFoundError | UserNotFoundError | UserNotAuthorizedError,
   {
     product : Product
   }
@@ -36,10 +37,14 @@ export class ActiveProductUseCase{
       return makeLeft(new ProductNotFoundError())
     }
 
-    const userExists = await this.usersRepository.findById(updateByUserId);
+    const user = await this.usersRepository.findById(updateByUserId);
 
-    if(!userExists){
+    if(!user){
       return makeLeft(new UserNotFoundError())
+    }
+
+    if(user.role != 'admin' && product.createdByUserId.toString() !== updateByUserId) {
+      return makeLeft(new UserNotAuthorizedError())
     }
 
     product.activate(new UniqueEntityID(updateByUserId)) 

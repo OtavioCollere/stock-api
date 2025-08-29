@@ -42,9 +42,9 @@ Caso de uso PRODUCTS
 [x] - cadastrar produto
   - somente ao cadastrar será possivel mexer na quantidade
 [x] - editar produto
-[] - archivar produto
-[] - ativar produto 
-[] - excluir produto ( somente admin )
+[x] - archivar produto
+[x] - ativar produto 
+[] - excluir produto ( somente admin ou user que criou )
   
 
 
