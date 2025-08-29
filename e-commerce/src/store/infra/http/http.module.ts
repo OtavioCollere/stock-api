@@ -8,6 +8,8 @@ import { GatewaysModule } from "../gateways/gateways.module";
 import { DatabaseModule } from "../database/database.module";
 import { AuthenticateController } from "./controllers/users/authenticate-user";
 import { AuthenticateUseCase } from "@/store/domain/application/use-cases/users/authenticate";
+import { RegisterProductUseCase } from "@/store/domain/application/use-cases/products/register-product";
+import { RegisterProductController } from "./controllers/product/register-product";
 
 
 @Module({
@@ -17,11 +19,15 @@ import { AuthenticateUseCase } from "@/store/domain/application/use-cases/users/
     PrismaService,
 
     RegisterUserUseCase,
-    AuthenticateUseCase
+    AuthenticateUseCase,
+
+    RegisterProductUseCase
   ],
   controllers : [
     RegisterUserController,
-    AuthenticateController
+    AuthenticateController,
+
+    RegisterProductController
   ]
 })
 export class HttpModule {}

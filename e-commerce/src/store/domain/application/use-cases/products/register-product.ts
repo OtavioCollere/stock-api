@@ -1,12 +1,13 @@
 import { makeLeft, makeRight, type Either } from "@/store/core/either/either";
-import type { ProductsRepository } from "../../repositories/products-repository";
+import { ProductsRepository } from "../../repositories/products-repository";
 import { Product } from "@/store/domain/enterprise/entities/product";
 import { ProductAlreadyExistsError } from "@/store/core/errors/product-already-exists-error";
 import { CategoryNotFoundError } from "@/store/core/errors/category-not-found-error";
 import { UserNotFoundError } from "@/store/core/errors/user-not-found-error";
-import type { UsersRepository } from "../../repositories/users-repository";
-import type { CategorysRepository } from "../../repositories/categorys-repository";
+import { UsersRepository } from "../../repositories/users-repository";
+import { CategorysRepository } from "../../repositories/categorys-repository";
 import { UniqueEntityID } from "@/store/core/entities/unique-entity-id";
+import { Injectable } from "@nestjs/common";
 
 interface RegisterProductUseCaseRequest{
   name : string
@@ -25,6 +26,7 @@ type RegisterProductUseCaseResponse = Either<
   }
 >
 
+@Injectable()
 export class RegisterProductUseCase{
 
   constructor(
@@ -64,7 +66,7 @@ export class RegisterProductUseCase{
        createdByUserId : new UniqueEntityID(createdByUserId)
     })
 
-    await this.productsRepository.save(product);
+    await this.productsRepository.create(product);
 
     return makeRight({
       product
