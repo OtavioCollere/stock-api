@@ -10,7 +10,6 @@
         "./src/*"
       ]
     },
-    "noEmit": true,
     "lib": [
       "es2022",
       "ESNext.Array",

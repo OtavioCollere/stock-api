@@ -6,7 +6,7 @@ import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { hash } from 'bcryptjs';
 import supertest from 'supertest';
-import { makeUser, UserFactory } from 'test/factories/make-user';
+import { UserFactory } from 'test/factories/make-user';
 
 
 describe('Authenticate  (E2E)', () => {
@@ -34,17 +34,16 @@ describe('Authenticate  (E2E)', () => {
     await userFactory.makePrismaUser({
       cpf : '11144477735',
       email : 'otavio@email.com',
-      password : await hash('1234', 8),
+      password : await hash('12345678910', 8),
     })
     
     const result = await supertest(app.getHttpServer())
     .post('/sessions')
     .send({
       email : 'otavio@email.com',
-      password : '1234',
+      password : '12345678910',
     })
 
-    console.log(result.body)
     expect(result.status).toEqual(201);
     expect(result.body).toEqual({
       access_token : expect.any(String),

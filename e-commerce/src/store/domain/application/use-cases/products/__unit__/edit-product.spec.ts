@@ -1,27 +1,18 @@
 import { InMemoryProductsRepository } from "test/in-memory-repositories/in-memory-products-repository"
 import { InMemoryUsersRepository } from "test/in-memory-repositories/in-memory-users-repository"
-import { InMemoryCategorysRepository } from "test/in-memory-repositories/in-memory-categorys-repository"
 import { EditProductUseCase } from "../edit-product"
-import { makeProduct } from "test/factories/make-product"
-import { makeUser } from "test/factories/make-user"
-import { makeCategory } from "test/factories/make-category"
-import { isLeft, isRight, unwrapEither } from "@/store/core/either/either"
-import { ProductNotFoundError } from "@/store/core/errors/product-not-found-error"
-import { UserNotFoundError } from "@/store/core/errors/user-not-found-error"
-import { UserNotAuthorizedError } from "@/store/core/errors/user-not-authorized-error"
-import { ProductAlreadyExistsError } from "@/store/core/errors/product-already-exists-error"
-import { CategoryNotFoundError } from "@/store/core/errors/category-not-found-error"
+import { InMemoryCategoriesRepository } from "test/in-memory-repositories/in-memory-categorys-repository"
 
 describe("Edit Product Unit Tests", () => {
   let sut: EditProductUseCase
   let productsRepo: InMemoryProductsRepository
   let usersRepo: InMemoryUsersRepository
-  let categoryRepo: InMemoryCategorysRepository
+  let categoryRepo: InMemoryCategoriesRepository
 
   beforeEach(() => {
     productsRepo = new InMemoryProductsRepository()
     usersRepo = new InMemoryUsersRepository()
-    categoryRepo = new InMemoryCategorysRepository()
+    categoryRepo = new InMemoryCategoriesRepository()
     sut = new EditProductUseCase(productsRepo, usersRepo, categoryRepo)
   })
 

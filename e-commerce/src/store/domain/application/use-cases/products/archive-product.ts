@@ -7,6 +7,7 @@ import { UserNotFoundError } from "@/store/core/errors/user-not-found-error";
 import { UserNotAuthorizedError } from "@/store/core/errors/user-not-authorized-error";
 import type { UsersRepository } from "../../repositories/users-repository";
 import { UniqueEntityID } from "@/store/core/entities/unique-entity-id";
+import { Injectable } from "@nestjs/common";
 
 interface ArchiveProductUseCaseRequest{
   productId : string
@@ -20,6 +21,7 @@ type ArchiveProductUseCaseResponse = Either<
 }
 >
 
+@Injectable()
 export class ArchiveProductUseCase{
 
   constructor(

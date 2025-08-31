@@ -31,4 +31,55 @@ model User {
   emailVerified Boolean
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt()
+
+  // Relações com Category
+  categoriesCreated Category[] @relation("CategoriesCreated")
+  categoriesUpdated Category[] @relation("CategoriesUpdated")
+
+  // Relações com Product
+  productsCreated Product[] @relation("ProductsCreated")
+  productsUpdated Product[] @relation("ProductsUpdated")
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  createdBy String
+  updatedBy String?
+
+  createdByUser User  @relation("CategoriesCreated", fields: [createdBy], references: [id])
+  updatedByUser User? @relation("CategoriesUpdated", fields: [updatedBy], references: [id])
+
+  products Product[]
+}
+
+enum Status {
+  active
+  archived
+}
+
+model Product {
+  id String @id @default(uuid())
+
+  name         String
+  slug         String
+  productCode  String?
+  description  String?
+  quantity     Int
+  currentPrice Float
+  status       Status
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt()
+
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+
+  createdByUserId String
+  updatedByUserId String?
+
+  createdByUser User  @relation("ProductsCreated", fields: [createdByUserId], references: [id])
+  updatedByUser User? @relation("ProductsUpdated", fields: [updatedByUserId], references: [id])
 }

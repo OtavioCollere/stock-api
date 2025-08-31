@@ -13,7 +13,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
   .setTitle('E-commerce API')
   .setVersion('1.0')
-  .addTag('ecommerec')
+  .addTag('ecommerce')
   .build();
 const documentFactory = () => SwaggerModule.createDocument(app, config);
 SwaggerModule.setup('api', app, documentFactory);

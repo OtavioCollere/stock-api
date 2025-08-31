@@ -8,6 +8,7 @@ import { UsersRepository } from "../../repositories/users-repository";
 import { Product } from "@/store/domain/enterprise/entities/product";
 import { UniqueEntityID } from "@/store/core/entities/unique-entity-id";
 import { UserNotAuthorizedError } from "@/store/core/errors/user-not-authorized-error";
+import { Injectable } from "@nestjs/common";
 
 interface ActiveProductUseCaseRequest{
   productId : string
@@ -21,6 +22,7 @@ type ActiveProductUseCaseResponse = Either<
   }
 >
 
+@Injectable()
 export class ActiveProductUseCase{
 
   constructor(

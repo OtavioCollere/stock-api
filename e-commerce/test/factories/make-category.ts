@@ -1,6 +1,10 @@
 import { UniqueEntityID } from "@/store/core/entities/unique-entity-id";
 import { Category, type CategoryProps } from "@/store/domain/enterprise/entities/category";
+import { PrismaService } from "@/store/infra/database/prisma.service";
+import { PrismaCategoriesMapper } from "@/store/infra/database/prisma/mappers/prisma-categories-mapper";
 import { faker } from "@faker-js/faker";
+import { Injectable } from "@nestjs/common";
+
 
 export function makeCategory(override : Partial<CategoryProps> = {}, id? : UniqueEntityID) {
   const category = Category.create({
@@ -12,17 +16,18 @@ export function makeCategory(override : Partial<CategoryProps> = {}, id? : Uniqu
   return category;
 }
 
-// @Injectable()
-// export class ProductFactory {
-//   constructor(private prismaService: PrismaService) {}
+@Injectable()
+export class CategoryFactory {
+  constructor(private prismaService: PrismaService) {}
 
-//   async makePrismaUser(data: Partial<UserProps> = {}): Promise<User> {
-//     const product = makeProduct(data);
+  async makeCategory(data: Partial<CategoryProps
+    > = {}): Promise<Category> {
+    const category = makeCategory(data);
 
-//     await this.prismaService.user.create({
-//       data: .toPrisma(product),
-//     });
+    await this.prismaService.category.create({
+      data: PrismaCategoriesMapper.toPrisma(category),
+    });
     
-//     return product;
-//   }
-// }
+    return category;
+  }
+}

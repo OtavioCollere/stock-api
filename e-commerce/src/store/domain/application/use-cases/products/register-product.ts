@@ -5,9 +5,9 @@ import { ProductAlreadyExistsError } from "@/store/core/errors/product-already-e
 import { CategoryNotFoundError } from "@/store/core/errors/category-not-found-error";
 import { UserNotFoundError } from "@/store/core/errors/user-not-found-error";
 import { UsersRepository } from "../../repositories/users-repository";
-import { CategorysRepository } from "../../repositories/categorys-repository";
 import { UniqueEntityID } from "@/store/core/entities/unique-entity-id";
 import { Injectable } from "@nestjs/common";
+import { CategoriesRepository } from "../../repositories/categories-repository";
 
 interface RegisterProductUseCaseRequest{
   name : string
@@ -32,7 +32,7 @@ export class RegisterProductUseCase{
   constructor(
     private productsRepository : ProductsRepository,
     private usersRepository : UsersRepository,
-    private categorysRepository : CategorysRepository
+    private categoriesRepository : CategoriesRepository
   ) {}
 
   async execute({name, productCode, description, quantity, currentPrice, categoryId, createdByUserId} : RegisterProductUseCaseRequest) : Promise<RegisterProductUseCaseResponse> {
@@ -50,7 +50,7 @@ export class RegisterProductUseCase{
       return makeLeft(new UserNotFoundError())
     }
 
-    const categoryExists = await this.categorysRepository.findById(categoryId)
+    const categoryExists = await this.categoriesRepository.findById(categoryId)
 
     if (!categoryExists) {
       return makeLeft(new CategoryNotFoundError())

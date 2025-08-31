@@ -1,5 +1,4 @@
 import { Module } from "@nestjs/common";
-import { PrismaService } from "../database/prisma.service";
 import { RegisterUserController } from "./controllers/users/register-user";
 import { RegisterUserUseCase } from "@/store/domain/application/use-cases/users/register-user";
 import { AuthModule } from "../auth/auth.module";
@@ -10,24 +9,25 @@ import { AuthenticateController } from "./controllers/users/authenticate-user";
 import { AuthenticateUseCase } from "@/store/domain/application/use-cases/users/authenticate";
 import { RegisterProductUseCase } from "@/store/domain/application/use-cases/products/register-product";
 import { RegisterProductController } from "./controllers/product/register-product";
+import { ActiveProductUseCase } from "@/store/domain/application/use-cases/products/active-product";
+import { ActiveProductController } from "./controllers/product/active-product";
 
 
 @Module({
   imports: [DatabaseModule, AuthModule, CryptographyModule, GatewaysModule],
-  exports: [PrismaService],
   providers: [
-    PrismaService,
-
     RegisterUserUseCase,
     AuthenticateUseCase,
 
-    RegisterProductUseCase
+    RegisterProductUseCase,
+    ActiveProductUseCase
   ],
   controllers : [
     RegisterUserController,
     AuthenticateController,
 
-    RegisterProductController
+    RegisterProductController,
+    ActiveProductController
   ]
 })
 export class HttpModule {}

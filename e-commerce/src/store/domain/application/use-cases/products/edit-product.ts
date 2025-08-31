@@ -6,9 +6,10 @@ import { UserNotFoundError } from "@/store/core/errors/user-not-found-error";
 import { UserNotAuthorizedError } from "@/store/core/errors/user-not-authorized-error";
 import { Product } from "@/store/domain/enterprise/entities/product";
 import type { UsersRepository } from "../../repositories/users-repository";
-import type { CategorysRepository } from "../../repositories/categorys-repository";
+import type { CategoriesRepository } from "../../repositories/categories-repository";
 import { ProductNotFoundError } from "@/store/core/errors/product-not-found-error";
 import { UniqueEntityID } from "@/store/core/entities/unique-entity-id";
+import { Injectable } from "@nestjs/common";
 
 interface EditProductUseCaseRequest{
   productId : string
@@ -26,11 +27,12 @@ type EditProductUseCaseResponse = Either<
   { product: Product }
 >
 
+@Injectable()
 export class EditProductUseCase {
   constructor(
     private productsRepository: ProductsRepository,
     private usersRepository: UsersRepository,
-    private categoryExists: CategorysRepository
+    private categoryExists: CategoriesRepository
   ) {}
 
   async execute({

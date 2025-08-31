@@ -1,6 +1,9 @@
 import { UniqueEntityID } from "@/store/core/entities/unique-entity-id";
 import { Product, type ProductProps } from "@/store/domain/enterprise/entities/product";
+import { PrismaService } from "@/store/infra/database/prisma.service";
+import { PrismaProductsMapper } from "@/store/infra/database/prisma/mappers/prisma-products-mapper";
 import { faker } from "@faker-js/faker";
+import { Injectable } from "@nestjs/common";
 
 export function makeProduct(override : Partial<ProductProps> = {}, id? : UniqueEntityID) {
   const product = Product.create({
@@ -17,17 +20,17 @@ export function makeProduct(override : Partial<ProductProps> = {}, id? : UniqueE
   return product;
 }
 
-// @Injectable()
-// export class ProductFactory {
-//   constructor(private prismaService: PrismaService) {}
+@Injectable()
+export class ProductFactory {
+  constructor(private prismaService: PrismaService) {}
 
-//   async makePrismaUser(data: Partial<UserProps> = {}): Promise<User> {
-//     const product = makeProduct(data);
+  async makeProduct(data: Partial<ProductProps> = {}): Promise<Product> {
+    const product = makeProduct(data);
 
-//     await this.prismaService.user.create({
-//       data: .toPrisma(product),
-//     });
+    await this.prismaService.product.create({
+      data: PrismaProductsMapper.toPrisma(product),
+    });
     
-//     return product;
-//   }
-// }
+    return product;
+  }
+}

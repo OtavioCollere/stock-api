@@ -3,7 +3,7 @@ import {it, describe, expect} from 'vitest'
 import { InMemoryProductsRepository } from 'test/in-memory-repositories/in-memory-products-repository'
 import { RegisterProductUseCase } from '../register-product'
 import { InMemoryUsersRepository } from 'test/in-memory-repositories/in-memory-users-repository'
-import { InMemoryCategorysRepository } from 'test/in-memory-repositories/in-memory-categorys-repository'
+
 import { makeProduct } from 'test/factories/make-product'
 import { makeUser } from 'test/factories/make-user'
 import { makeCategory } from 'test/factories/make-category'
@@ -12,19 +12,20 @@ import { isLeft, isRight, unwrapEither } from '@/store/core/either/either'
 import { ProductAlreadyExistsError } from '@/store/core/errors/product-already-exists-error'
 import { UserNotFoundError } from '@/store/core/errors/user-not-found-error'
 import { CategoryNotFoundError } from '@/store/core/errors/category-not-found-error'
+import { InMemoryCategoriesRepository } from 'test/in-memory-repositories/in-memory-categorys-repository'
 
 describe("Register Product Unit Tests", () => {
   
   let inMemoryProductsRepository : InMemoryProductsRepository
   let inMemoryUsersRepository : InMemoryUsersRepository
-  let inMemoryCategorysRepositorys : InMemoryCategorysRepository
+  let inMemoryCategoriesRepositorys : InMemoryCategoriesRepository
   let sut : RegisterProductUseCase
 
   beforeEach(() => {
     inMemoryProductsRepository = new InMemoryProductsRepository();
     inMemoryUsersRepository = new InMemoryUsersRepository();
-    inMemoryCategorysRepositorys = new InMemoryCategorysRepository();
-    sut = new RegisterProductUseCase(inMemoryProductsRepository, inMemoryUsersRepository, inMemoryCategorysRepositorys)
+    inMemoryCategoriesRepositorys = new InMemoryCategoriesRepository();
+    sut = new RegisterProductUseCase(inMemoryProductsRepository, inMemoryUsersRepository, inMemoryCategoriesRepositorys)
   })
 
   it("should be able to register product", async () => {
@@ -37,7 +38,7 @@ describe("Register Product Unit Tests", () => {
     const category = makeCategory({createdBy : user.id})
 
     inMemoryUsersRepository.items.push(user)
-    inMemoryCategorysRepositorys.items.push(category)
+    inMemoryCategoriesRepositorys.items.push(category)
 
     const result = await sut.execute({
       name : 'Produto X',
@@ -75,7 +76,7 @@ describe("Register Product Unit Tests", () => {
     })
 
     inMemoryUsersRepository.items.push(user)
-    inMemoryCategorysRepositorys.items.push(category)
+    inMemoryCategoriesRepositorys.items.push(category)
     inMemoryProductsRepository.items.push(product)
    
     const result = await sut.execute({
@@ -101,7 +102,7 @@ describe("Register Product Unit Tests", () => {
     });
 
     const category = makeCategory({createdBy : user.id})
-    inMemoryCategorysRepositorys.items.push(category)
+    inMemoryCategoriesRepositorys.items.push(category)
 
     const result = await sut.execute({
       name : 'Produto X',
@@ -128,7 +129,7 @@ describe("Register Product Unit Tests", () => {
     inMemoryUsersRepository.items.push(user)
 
     const category = makeCategory({createdBy : user.id})
-    inMemoryCategorysRepositorys.items.push(category)
+    inMemoryCategoriesRepositorys.items.push(category)
 
     const result = await sut.execute({
       name : 'Produto X',

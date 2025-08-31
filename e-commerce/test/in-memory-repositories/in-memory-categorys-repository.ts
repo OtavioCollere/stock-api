@@ -1,7 +1,7 @@
-import type { CategorysRepository } from "@/store/domain/application/repositories/categorys-repository";
+import type { CategoriesRepository } from "@/store/domain/application/repositories/categories-repository";
 import type { Category } from "@/store/domain/enterprise/entities/category";
 
-export class InMemoryCategorysRepository implements CategorysRepository{
+export class InMemoryCategoriesRepository implements CategoriesRepository{
   public items: Category[] = []
 
   async findById(id: string): Promise<Category | null> {
