@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiBody,
   ApiConflictResponse,
   ApiCreatedResponse,
@@ -33,6 +34,7 @@ type ActiveProductBodySchema = z.infer<typeof activeProductBodySchema>;
 
 @Controller('/products')
 @ApiTags('Products')
+@ApiBearerAuth('access-token') 
 export class ActiveProductController {
   constructor(private activeProduct: ActiveProductUseCase) {}
 

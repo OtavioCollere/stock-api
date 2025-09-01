@@ -1,11 +1,11 @@
 import { makeLeft, makeRight, type Either } from "@/store/core/either/either";
-import type { ProductsRepository } from "../../repositories/products-repository";
+import { ProductsRepository } from "../../repositories/products-repository";
 import { ProductNotFoundError } from "@/store/core/errors/product-not-found-error";
 import { ProductMustBeActiveError } from "@/store/core/errors/product-must-be-active-error";
-import type { Product } from "@/store/domain/enterprise/entities/product";
+import { Product } from "@/store/domain/enterprise/entities/product";
 import { UserNotFoundError } from "@/store/core/errors/user-not-found-error";
 import { UserNotAuthorizedError } from "@/store/core/errors/user-not-authorized-error";
-import type { UsersRepository } from "../../repositories/users-repository";
+import { UsersRepository } from "../../repositories/users-repository";
 import { UniqueEntityID } from "@/store/core/entities/unique-entity-id";
 import { Injectable } from "@nestjs/common";
 

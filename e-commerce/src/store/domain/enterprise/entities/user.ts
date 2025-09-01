@@ -39,6 +39,8 @@ export class User extends Entity<UserProps> {
     return this.props.cpf
   }
 
+
+  
   get email() {
     return this.props.email
   }
@@ -47,7 +49,7 @@ export class User extends Entity<UserProps> {
     return this.props.password
   }
 
-  get role() {
+  get role() : 'admin' | 'customer' | 'seller' {
     return this.props.role
   }
 

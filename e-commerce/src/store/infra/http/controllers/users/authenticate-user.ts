@@ -16,7 +16,7 @@ import { Public } from 'src/store/infra/auth/public';
 
 const authenticateBodySchema = z.object({
   email: z.string().email(),
-  password: z.string().min(8), // alinhe com a política real; evite mismatch com Swagger
+  password: z.string(), // alinhe com a política real; evite mismatch com Swagger
 });
 
 type AuthenticateBodySchema = z.infer<typeof authenticateBodySchema>;
@@ -35,8 +35,8 @@ export class AuthenticateController {
     schema: {
       type: 'object',
       properties: {
-        email: { type: 'string', format: 'email', example: 'user@example.com' },
-        password: { type: 'string', minLength: 8, example: 'S3cureP@ss!' },
+        email: { type: 'string', format: 'email', example: 'otavio@email.com' },
+        password: { type: 'string', minLength: 8, example: '1234' },
       },
       required: ['email', 'password'],
     },

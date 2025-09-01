@@ -11,6 +11,8 @@ import { RegisterProductUseCase } from "@/store/domain/application/use-cases/pro
 import { RegisterProductController } from "./controllers/product/register-product";
 import { ActiveProductUseCase } from "@/store/domain/application/use-cases/products/active-product";
 import { ActiveProductController } from "./controllers/product/active-product";
+import { ArchiveProductController } from "./controllers/product/archive-product";
+import { ArchiveProductUseCase } from "@/store/domain/application/use-cases/products/archive-product";
 
 
 @Module({
@@ -20,14 +22,16 @@ import { ActiveProductController } from "./controllers/product/active-product";
     AuthenticateUseCase,
 
     RegisterProductUseCase,
-    ActiveProductUseCase
+    ActiveProductUseCase,
+    ArchiveProductUseCase
   ],
   controllers : [
     RegisterUserController,
     AuthenticateController,
 
     RegisterProductController,
-    ActiveProductController
+    ActiveProductController,
+    ArchiveProductController
   ]
 })
 export class HttpModule {}

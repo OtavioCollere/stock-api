@@ -14,10 +14,21 @@ async function bootstrap() {
   .setTitle('E-commerce API')
   .setVersion('1.0')
   .addTag('ecommerce')
+  .addBearerAuth(
+    {
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      name: 'Authorization',
+      description: 'Insira o token JWT no formato: Bearer <token>',
+      in: 'header',
+    },
+    'access-token', // nome que será usado no @ApiBearerAuth
+  )
   .build();
+
 const documentFactory = () => SwaggerModule.createDocument(app, config);
 SwaggerModule.setup('api', app, documentFactory);
-
   await app.listen(port);
 }
 bootstrap();

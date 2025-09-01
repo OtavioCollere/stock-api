@@ -22,14 +22,14 @@ import { RegisterUserUseCase } from '@/store/domain/application/use-cases/users/
 import { EmailAlreadyExistsError } from '@/store/core/errors/email-already-exists-error';
 import { CpfIsNotValidError } from '@/store/core/errors/cpf-is-not-valid-error';
 import { CpfAlreadyExistsError } from '@/store/core/errors/cpf-already-exists-error';
+import { Public } from 'src/store/infra/auth/public';
 
-const PASSWORD_MIN = 12;
 
 const registerUserBodySchema = z.object({
   name: z.string().min(1),
   cpf: z.string().regex(/^\d{11}$/, 'CPF must have exactly 11 digits'),
   email: z.string().email(),
-  password: z.string().min(PASSWORD_MIN),
+  password: z.string(),
   role: z.enum(['customer', 'seller']),
   phone: z.string().regex(/^\d{11}$/, 'Phone number must have exactly 11 digits'),
   birthDate: z.coerce.date(), // aceita "2000-01-01"
@@ -39,6 +39,7 @@ type RegisterUserBodySchema = z.infer<typeof registerUserBodySchema>;
 
 @Controller('/users')
 @ApiTags('Auth')
+@Public()
 export class RegisterUserController {
   constructor(private registerUser: RegisterUserUseCase) {}
 
@@ -50,10 +51,10 @@ export class RegisterUserController {
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string', minLength: 1, example: 'Maria Silva' },
-        email: { type: 'string', format: 'email', example: 'maria@example.com' },
-        cpf: { type: 'string', pattern: '^[0-9]{11}$', example: '12345678901' },
-        password: { type: 'string', minLength: PASSWORD_MIN, example: 'Str0ngP@ssw0rd!' },
+        name: { type: 'string', minLength: 1, example: 'Otavio Takaki' },
+        email: { type: 'string', format: 'email', example: 'otavio@email.com' },
+        cpf: { type: 'string', pattern: '^[0-9]{11}$', example: '12354365782' },
+        password: { type: 'string', example: '1234' },
         role: { type: 'string', enum: ['customer', 'seller'], example: 'customer' },
         phone: { type: 'string', pattern: '^[0-9]{11}$', example: '11987654321' },
         birthDate: { type: 'string', format: 'date', example: '2000-01-01' },
