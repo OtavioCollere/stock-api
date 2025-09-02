@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import type { UsersRepository } from "../../repositories/users-repository";
 import type { ProductsRepository } from "../../repositories/products-repository";
 import type { StockMovementRepository } from "../../repositories/stock-movement-repository";
@@ -6,7 +6,7 @@ import { makeLeft, type Either } from "@/store/core/either/either";
 import { UserNotFoundError } from "@/store/core/errors/user-not-found-error";
 import { ProductNotFoundError } from "@/store/core/errors/product-not-found-error";
 import { UserNotAuthorizedError } from "@/store/core/errors/user-not-authorized-error";
-import type { InsufficientStockError } from "@/store/core/errors/insufficient-stock-error";
+import { InsufficientStockError } from "@/store/core/errors/insufficient-stock-error";
 
 export interface DecreaseStockUseCaseRequest{
   productId : string
@@ -44,17 +44,26 @@ export class DecreaseStockUseCase{
       return makeLeft(new ProductNotFoundError())
     }
 
-    const seller = await this.usersRepository.findById(sellerId);
+    const user = await this.usersRepository.findById(sellerId);
 
-    if(!seller) {
+    if(!user) {
       return makeLeft(new UserNotFoundError())
     }
 
-    if(seller.role !== 'seller' && seller.role !== 'admin'){ {
+    if(user.role !== 'admin' && user.id.toString() !== sellerId)
+    {
       return makeLeft(new UserNotAuthorizedError())
     }
 
-    
+    const stockQuantity = product.quantity;
+    const isValidQuantity = quantity <= stockQuantity;
+
+    if(!isValidQuantity)
+    {
+      return makeLeft(new InsufficientStockError())
+    }
+
+
 
   }
 
