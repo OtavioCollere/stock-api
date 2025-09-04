@@ -3,6 +3,7 @@ import { EnvModule } from './store/infra/env/env.module';
 import { ConfigModule } from '@nestjs/config';
 import { envSchema } from './store/infra/env/env';
 import { HttpModule } from './store/infra/http/http.module';
+import { EventsModule } from './store/infra/events/events.module';
 
 @Module({
   imports: [
@@ -11,7 +12,8 @@ import { HttpModule } from './store/infra/http/http.module';
       isGlobal : true
     }),
     EnvModule,
-    HttpModule
+    HttpModule,
+    EventsModule
   ],
   controllers: [],
   providers: [],

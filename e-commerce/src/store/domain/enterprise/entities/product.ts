@@ -1,6 +1,8 @@
-import { Entity } from "@/store/core/entities/entity"
-import type { UniqueEntityID } from "@/store/core/entities/unique-entity-id"
-import type { Optional } from "@prisma/client/runtime/library"
+import { AggregateRoot } from "@/store/core/entities/aggregate-root"
+import { UniqueEntityID } from "@/store/core/entities/unique-entity-id"
+import { Optional } from "@prisma/client/runtime/library"
+import { StockDecreasedEvent } from "../events/stock-decreased-event"
+import { StockIncreseadEvent } from "../events/stock-increased-event"
 
 export interface ProductProps{
   categoryId : UniqueEntityID
@@ -18,7 +20,7 @@ export interface ProductProps{
 }
 
 
-export class Product extends Entity<ProductProps> {
+export class Product extends AggregateRoot<ProductProps> {
 
   static create(props : Optional<ProductProps, 'slug' | 'createdAt' | 'updatedAt' | 'description' | 'updatedByUserId' | 'status' | 'productCode'>, id? :UniqueEntityID) {
     const product = new Product({
@@ -95,6 +97,18 @@ export class Product extends Entity<ProductProps> {
 
   get updatedAt() {
     return this.props.updatedAt
+  }
+
+  decreaseStock(productId : UniqueEntityID, quantity: number, userId: UniqueEntityID, reason?: string) {
+    this.props.quantity -= quantity;
+    this.touch()
+    this.addDomainEvent(new StockDecreasedEvent(productId, quantity, userId, reason,))
+  }
+
+  increaseStock(productId : UniqueEntityID, quantity: number, userId: UniqueEntityID, reason?: string){
+    this.props.quantity += quantity;
+    this.touch()
+    this.addDomainEvent(new StockIncreseadEvent(productId, quantity, userId, reason,))
   }
 
   // ===================

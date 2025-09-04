@@ -1,5 +1,5 @@
-import type { StockMovementRepository } from "@/store/domain/application/repositories/stock-movement-repository";
-import type { StockMovement } from "@/store/domain/enterprise/entities/stockMovement";
+import { StockMovementRepository } from "@/store/domain/application/repositories/stock-movement-repository";
+import { StockMovement } from "@/store/domain/enterprise/entities/stockMovement";
 
 
 export class InMemoryStockMovementRepository implements StockMovementRepository {
