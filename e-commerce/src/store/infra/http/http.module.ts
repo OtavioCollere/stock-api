@@ -13,6 +13,10 @@ import { ActiveProductUseCase } from "@/store/domain/application/use-cases/produ
 import { ActiveProductController } from "./controllers/product/active-product";
 import { ArchiveProductController } from "./controllers/product/archive-product";
 import { ArchiveProductUseCase } from "@/store/domain/application/use-cases/products/archive-product";
+import { DecreaseQuantityUseCase } from "@/store/domain/application/use-cases/products/decrease-quantity";
+import { DecreaseQuantityController } from "./controllers/product/decrease-quantity";
+import { IncreaseQuantityController } from "./controllers/product/increase-quantity";
+import { IncreaseQuantityUseCase } from "@/store/domain/application/use-cases/products/increase-quantity";
 
 
 @Module({
@@ -23,7 +27,10 @@ import { ArchiveProductUseCase } from "@/store/domain/application/use-cases/prod
 
     RegisterProductUseCase,
     ActiveProductUseCase,
-    ArchiveProductUseCase
+    ArchiveProductUseCase,
+
+    DecreaseQuantityUseCase,
+    IncreaseQuantityUseCase
   ],
   controllers : [
     RegisterUserController,
@@ -31,7 +38,10 @@ import { ArchiveProductUseCase } from "@/store/domain/application/use-cases/prod
 
     RegisterProductController,
     ActiveProductController,
-    ArchiveProductController
+    ArchiveProductController,
+
+    DecreaseQuantityController,
+    IncreaseQuantityController
   ]
 })
 export class HttpModule {}

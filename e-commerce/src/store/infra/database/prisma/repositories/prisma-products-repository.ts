@@ -3,6 +3,7 @@ import { Product } from "@/store/domain/enterprise/entities/product";
 import { PrismaService } from "../../prisma.service";
 import { PrismaProductsMapper } from "../mappers/prisma-products-mapper";
 import { Injectable } from "@nestjs/common";
+import { DomainEvents } from "@/store/core/events/domain-events";
 
 @Injectable()
 export class PrismaProductsRepository implements ProductsRepository{
@@ -55,6 +56,8 @@ export class PrismaProductsRepository implements ProductsRepository{
       },
       data : PrismaProductsMapper.toPrisma(product)
     })
+
+    await DomainEvents.dispatchEventsForAggregate(product.id)
 
     return product;
 

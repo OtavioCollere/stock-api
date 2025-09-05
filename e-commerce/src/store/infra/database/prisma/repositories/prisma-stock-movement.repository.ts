@@ -2,7 +2,9 @@ import { StockMovementRepository } from "@/store/domain/application/repositories
 import { StockMovement } from "@/store/domain/enterprise/entities/stockMovement";
 import { PrismaService } from "../../prisma.service";
 import { PrismaStockMovementMapper } from "../mappers/prisma-stock-movement-mapper";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class PrismaStockMovementRepository implements StockMovementRepository{
   constructor(
     private prismaService : PrismaService

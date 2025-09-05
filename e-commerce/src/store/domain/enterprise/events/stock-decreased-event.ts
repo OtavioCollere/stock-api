@@ -1,6 +1,8 @@
 import { UniqueEntityID } from "@/store/core/entities/unique-entity-id";
 import { DomainEvent } from "@/store/core/events/domain-event";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class StockDecreasedEvent implements DomainEvent{
   public ocurredAt : Date;
   public quantity: number;

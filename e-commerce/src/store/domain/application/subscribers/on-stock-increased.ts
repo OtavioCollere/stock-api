@@ -30,6 +30,7 @@ export class OnStockIncresead implements EventHandler{
       reason : event.reason,
     })
 
+
     await this.stockMovementRepository.create(stockMovement)
   }
 

@@ -7,7 +7,6 @@ import { ProductNotFoundError } from "@/store/core/errors/product-not-found-erro
 import { UserNotAuthorizedError } from "@/store/core/errors/user-not-authorized-error";
 import { InsufficientStockError } from "@/store/core/errors/insufficient-stock-error";
 import { UniqueEntityID } from "@/store/core/entities/unique-entity-id";
-import { DomainEvents } from "@/store/core/events/domain-events";
 
 export interface IncreaseQuantityUseCaseRequest{
   productId : string
@@ -58,8 +57,6 @@ export class IncreaseQuantityUseCase{
     product.increaseStock(new UniqueEntityID(productId) ,quantity, new UniqueEntityID(sellerId), reason);
 
     await this.productsRepository.save(product)
-
-    DomainEvents.dispatchEventsForAggregate(product.id)
 
     return makeRight({
       productId : productId,
