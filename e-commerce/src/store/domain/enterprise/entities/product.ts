@@ -1,6 +1,8 @@
-import { Entity } from "@/store/core/entities/entity"
-import type { UniqueEntityID } from "@/store/core/entities/unique-entity-id"
-import type { Optional } from "@prisma/client/runtime/library"
+import { AggregateRoot } from "@/store/core/entities/aggregate-root"
+import { UniqueEntityID } from "@/store/core/entities/unique-entity-id"
+import { InsufficientStockError } from "@/store/core/errors/insufficient-stock-error"
+import { Optional } from "@/store/core/types/optional"
+import { StockDecreasedEvent } from "../events/stock-decreased-event"
 
 export interface ProductProps{
   categoryId : UniqueEntityID
@@ -18,7 +20,7 @@ export interface ProductProps{
 }
 
 
-export class Product extends Entity<ProductProps> {
+export class Product extends AggregateRoot<ProductProps> {
 
   static create(props : Optional<ProductProps, 'slug' | 'createdAt' | 'updatedAt' | 'description' | 'updatedByUserId' | 'status' | 'productCode'>, id? :UniqueEntityID) {
     const product = new Product({
@@ -137,6 +139,24 @@ export class Product extends Entity<ProductProps> {
     this.touch()
   }
 
+  // methods
+  stockDecreased(quantity: number, sellerId : UniqueEntityID, reason? : string) {
+    if(quantity > this.props.quantity) {
+      throw new InsufficientStockError();
+    }
+
+    this.props.quantity -= quantity;
+    this.props.updatedByUserId = sellerId
+    this.touch();
+
+    this.addDomainEvent(new StockDecreasedEvent(
+      this.id,
+      sellerId,
+      quantity,
+      reason
+    ))
+
+  }
 
 
   // ===================

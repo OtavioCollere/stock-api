@@ -7,6 +7,8 @@ import { UserNotFoundError } from "@/store/core/errors/user-not-found-error";
 import { ProductNotFoundError } from "@/store/core/errors/product-not-found-error";
 import { UserNotAuthorizedError } from "@/store/core/errors/user-not-authorized-error";
 import { InsufficientStockError } from "@/store/core/errors/insufficient-stock-error";
+import { StockMovement } from "@/store/domain/enterprise/entities/stockMovement";
+import { UniqueEntityID } from "@/store/core/entities/unique-entity-id";
 
 export interface DecreaseStockUseCaseRequest{
   productId : string
@@ -63,7 +65,17 @@ export class DecreaseStockUseCase{
       return makeLeft(new InsufficientStockError())
     }
 
+    const stockMovement = StockMovement.create({
+      productId : new UniqueEntityID(productId),
+      sellerId : new UniqueEntityID(sellerId),
+      type,
+      quantity,
+      reason
+    })
 
+    await this.stockMovementRepository.create(stockMovement)
+
+    
 
   }
 
