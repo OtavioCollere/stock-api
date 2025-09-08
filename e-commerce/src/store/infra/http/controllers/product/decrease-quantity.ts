@@ -94,6 +94,10 @@ export class DecreaseQuantityController {
           type: 'string',
           description: 'Reason for decreasing the stock',
         },
+        quantity: {
+          type: 'number',
+          description: '10',
+        },
       },
       example: {
         productId: 'c3d2e1f0-1234-5678-9abc-def123456789',
@@ -167,6 +171,7 @@ export class DecreaseQuantityController {
       sellerId: stockMovement.sellerId.toString(),
       type: stockMovement.type,
       reason: stockMovement.reason,
+      quantity : stockMovement.quantity
     };
   }
 }

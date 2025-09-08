@@ -1,5 +1,4 @@
 import { AggregateRoot } from "@/store/core/entities/aggregate-root";
-<<<<<<< HEAD
 import { UniqueEntityID } from "@/store/core/entities/unique-entity-id";
 import { OrderItem } from "./order-item";
 import { Optional } from "@/store/core/types/optional"
@@ -84,20 +83,3 @@ export class Order extends AggregateRoot<OrderProps> {
     this.props.updatedAt = value
   }
 }
-=======
-import type { UniqueEntityID } from "@/store/core/entities/unique-entity-id";
-
-export interface OrderProps{
-  customerId : UniqueEntityID,
-  totalAmount: number
-  deliveryAddress: string
-  items : OrderItem[]
-  status : 'pending' | 'paid' | 'delivered' | 'cancelled'
-  createdAt : Date
-  updatedAt : Date
-}
-
-export class Order extends AggregateRoot<OrderProps>{
-  static create(){}
-}
->>>>>>> ee25a86ff657c0d62cfc81f8c1db754474aa2d91
