@@ -3,22 +3,29 @@ import { UniqueEntityID } from "@/store/core/entities/unique-entity-id";
 import { Optional } from "@prisma/client/runtime/library"
 
 export interface OrderItemProps {
+  orderId? : UniqueEntityID
   productId: UniqueEntityID
   quantity: number
   unitPrice: number
-  discount?: number
-  subTotal: number
+  subTotal?: number
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export class OrderItem extends Entity<OrderItemProps> {
 
-  static create(props: Optional<OrderItemProps, 'discount'>, id?: UniqueEntityID) {
+  static create(props: Optional<OrderItemProps, 'createdAt' | 'updatedAt' |  'subTotal'>, id?: UniqueEntityID) {
     const orderItem = new OrderItem({
-      discount: props.discount ?? 0,
       ...props,
+      createdAt: props.createdAt ?? new Date(),
+      subTotal : (props.quantity * props.unitPrice)
     }, id)
 
     return orderItem
+  }
+
+  get orderId(): UniqueEntityID | undefined {
+    return this.props.orderId
   }
 
   // Getters
@@ -34,11 +41,8 @@ export class OrderItem extends Entity<OrderItemProps> {
     return this.props.unitPrice
   }
 
-  get discount(): number {
-    return this.props.discount ?? 0
-  }
 
-  get subTotal(): number {
+  get subTotal(): number | undefined {
     return this.props.subTotal
   }
 
@@ -53,10 +57,6 @@ export class OrderItem extends Entity<OrderItemProps> {
 
   set unitPrice(value: number) {
     this.props.unitPrice = value
-  }
-
-  set discount(value: number) {
-    this.props.discount = value
   }
 
   set subTotal(value: number) {

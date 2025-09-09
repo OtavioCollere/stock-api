@@ -7,16 +7,16 @@ import { UsersRepository } from "../../repositories/users-repository";
 import { StockService } from "@/store/domain/enterprise/services/stock-service";
 import { InsufficientStockForOrderItemError } from "@/store/core/errors/insufficient-stock-order-item-error";
 import { UniqueEntityID } from "@/store/core/entities/unique-entity-id";
+import { OrderNotFoundError } from "@/store/core/errors/order-not-found-error";
 
 interface RegisterOrderUseCaseRequest {
     customerId: string
     orderItems: OrderItem[]
-    totalAmount: number
     deliveryAddress: string
 }
 
 type RegisterOrderUseCaseResponse = Either<
-UserNotFoundError,
+ OrderNotFoundError | UserNotFoundError,
 {
   order : Order
 }
@@ -40,6 +40,17 @@ export class RegisterOrderUseCase{
 
     let totalAmount = 0;
 
+    const orderId = new UniqueEntityID()
+    orderItems = orderItems.map(item =>
+      OrderItem.create({
+        orderId,
+        productId: item.productId,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        subTotal: item.subTotal,
+      })
+    )
+
     for (let item of orderItems){
       const availableStock = this.stockService.canBuy(item.productId.toString(), item.quantity);
 
@@ -49,7 +60,6 @@ export class RegisterOrderUseCase{
 
       totalAmount += item.subTotal
     }
-
 
     const order = Order.create({
       customerId : new UniqueEntityID(customerId),
