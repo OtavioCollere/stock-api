@@ -6,11 +6,11 @@ import { InMemoryStockMovementRepository } from "test/in-memory-repositories/in-
 import { makeUser } from "test/factories/make-user";
 import { makeProduct } from "test/factories/make-product";
 import { isLeft, isRight, unwrapEither } from "@/store/core/either/either";
-import { OnStockDecresead } from "../../../subscribers/on-stock-decreased";
 import { ProductNotFoundError } from "@/store/core/errors/product-not-found-error";
 import { UserNotFoundError } from "@/store/core/errors/user-not-found-error";
 import { UserNotAuthorizedError } from "@/store/core/errors/user-not-authorized-error";
 import { InsufficientStockError } from "@/store/core/errors/insufficient-stock-error";
+import { OnStockDecreased } from "../../../subscribers/on-stock-decreased";
 
 describe(("Decrease quantity unit tests"), () => {
   let sut : DecreaseQuantityUseCase
@@ -26,7 +26,7 @@ describe(("Decrease quantity unit tests"), () => {
   })
 
   it("Should be able to decrease quantity of a product", async () => {
-    const onStockDecresead = new OnStockDecresead(inMemoryStockMovementRepository)
+    const onStockDecresead = new OnStockDecreased(inMemoryStockMovementRepository)
 
     const user = makeUser({
       name : 'otavio'

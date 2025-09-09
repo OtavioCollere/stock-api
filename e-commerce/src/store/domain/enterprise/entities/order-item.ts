@@ -7,14 +7,14 @@ export interface OrderItemProps {
   productId: UniqueEntityID
   quantity: number
   unitPrice: number
-  subTotal?: number
+  subTotal: number
   createdAt?: Date
   updatedAt?: Date
 }
 
 export class OrderItem extends Entity<OrderItemProps> {
 
-  static create(props: Optional<OrderItemProps, 'createdAt' | 'updatedAt' |  'subTotal'>, id?: UniqueEntityID) {
+  static create(props: Optional<OrderItemProps, 'orderId' | 'createdAt' | 'updatedAt' |  'subTotal'>, id?: UniqueEntityID) {
     const orderItem = new OrderItem({
       ...props,
       createdAt: props.createdAt ?? new Date(),
@@ -42,7 +42,7 @@ export class OrderItem extends Entity<OrderItemProps> {
   }
 
 
-  get subTotal(): number | undefined {
+  get subTotal(): number  {
     return this.props.subTotal
   }
 

@@ -4,10 +4,11 @@ import { Order } from "@/store/domain/enterprise/entities/order";
 import { OrderItem } from "@/store/domain/enterprise/entities/order-item";
 import { OrdersRepository } from "../../repositories/orders-repository";
 import { UsersRepository } from "../../repositories/users-repository";
-import { StockService } from "@/store/domain/enterprise/services/stock-service";
 import { InsufficientStockForOrderItemError } from "@/store/core/errors/insufficient-stock-order-item-error";
 import { UniqueEntityID } from "@/store/core/entities/unique-entity-id";
 import { OrderNotFoundError } from "@/store/core/errors/order-not-found-error";
+import { ProductNotFoundError } from "@/store/core/errors/product-not-found-error";
+import { ProductsRepository } from "../../repositories/products-repository";
 
 interface RegisterOrderUseCaseRequest {
     customerId: string
@@ -16,7 +17,7 @@ interface RegisterOrderUseCaseRequest {
 }
 
 type RegisterOrderUseCaseResponse = Either<
- OrderNotFoundError | UserNotFoundError,
+ OrderNotFoundError | UserNotFoundError | ProductNotFoundError,
 {
   order : Order
 }
@@ -27,7 +28,7 @@ export class RegisterOrderUseCase{
   constructor(
     private ordersRepository: OrdersRepository,
     private usersRepository: UsersRepository,
-    private stockService : StockService
+    private productsRepository: ProductsRepository
   ){}
 
   async execute({customerId, orderItems, deliveryAddress}: RegisterOrderUseCaseRequest): Promise<RegisterOrderUseCaseResponse>{
@@ -47,12 +48,18 @@ export class RegisterOrderUseCase{
         productId: item.productId,
         quantity: item.quantity,
         unitPrice: item.unitPrice,
-        subTotal: item.subTotal,
       })
     )
 
     for (let item of orderItems){
-      const availableStock = this.stockService.canBuy(item.productId.toString(), item.quantity);
+
+      let product = await this.productsRepository.findById(item.productId.toString())
+
+      if (!product){
+        return makeLeft(new ProductNotFoundError())
+      }
+
+      let availableStock = product.quantity >= item.quantity
 
       if(!availableStock) {
         return makeLeft(new InsufficientStockForOrderItemError(item.productId.toString(), item.quantity))
