@@ -23,7 +23,7 @@ export class Order extends AggregateRoot<OrderProps> {
     const order = new Order({
       ...props,
       status: props.status ?? 'PENDING',
-      createdAt: props.createdAt ?? new Date(),
+      createdAt: props.createdAt ?? new Date()
     }, id)
 
     return order

@@ -26,6 +26,6 @@ export class InMemoryOrderItemsRepository implements OrderItemsRepository{
   }
 
   async deleteByOrderId(orderId: string): Promise<void> {
-    this.items = this.items.filter((item) => item.orderId.toString() === orderId)
+    this.items = this.items.filter((item) => item.orderId?.toString() === orderId)
   }
 }

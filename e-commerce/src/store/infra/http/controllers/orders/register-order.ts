@@ -20,7 +20,7 @@ import z from 'zod';
 import { ZodPipe } from '../../pipes/zod-validation-pipe';
 import { isLeft, unwrapEither } from '@/store/core/either/either';
 import { Public } from 'src/store/infra/auth/public';
-import type { RegisterOrderUseCase } from '@/store/domain/application/use-cases/order/register-order';
+import { RegisterOrderUseCase } from '@/store/domain/application/use-cases/order/register-order';
 import { OrderNotFoundError } from '@/store/core/errors/order-not-found-error';
 import { UserNotFoundError } from '@/store/core/errors/user-not-found-error';
 import { ProductNotFoundError } from '@/store/core/errors/product-not-found-error';
