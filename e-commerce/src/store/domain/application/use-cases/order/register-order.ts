@@ -11,9 +11,13 @@ import { ProductNotFoundError } from "@/store/core/errors/product-not-found-erro
 import { ProductsRepository } from "../../repositories/products-repository";
 
 interface RegisterOrderUseCaseRequest {
-    customerId: string
-    orderItems: OrderItem[]
-    deliveryAddress: string
+  customerId: string
+  orderItems: {
+    productId: string
+    quantity: number
+    unitPrice: number
+  }[]
+  deliveryAddress: string
 }
 
 type RegisterOrderUseCaseResponse = Either<
@@ -42,16 +46,16 @@ export class RegisterOrderUseCase{
     let totalAmount = 0;
 
     const orderId = new UniqueEntityID()
-    orderItems = orderItems.map(item =>
+    const orderItemsEntities = orderItems.map(item =>
       OrderItem.create({
         orderId,
-        productId: item.productId,
+        productId: new UniqueEntityID(item.productId),
         quantity: item.quantity,
         unitPrice: item.unitPrice,
       })
     )
 
-    for (let item of orderItems){
+    for (let item of orderItemsEntities){
 
       let product = await this.productsRepository.findById(item.productId.toString())
 
@@ -70,7 +74,7 @@ export class RegisterOrderUseCase{
 
     const order = Order.create({
       customerId : new UniqueEntityID(customerId),
-      orderItems,
+      orderItems : orderItemsEntities,
       totalAmount,
       deliveryAddress
     })

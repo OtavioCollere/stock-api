@@ -67,13 +67,11 @@ describe("Register Order Unit Tests", () => {
       });
       inMemoryProductsRepository.items.push(product)
 
-      orderItems.push(
-        OrderItem.create({
-          productId: product.id,
-          quantity: 10,
-          unitPrice: 1000
-        }),
-      )
+    orderItems.push({
+      productId: product.id.toString(),
+      quantity: 10,
+      unitPrice: 1000
+    })
  
     }
 
@@ -121,13 +119,11 @@ describe("Register Order Unit Tests", () => {
 
     const orderItems = []
 
-    orderItems.push(
-      OrderItem.create({
-        productId: new UniqueEntityID('fakeId'),
-        quantity: 10,
-        unitPrice: 1000
-      }),
-    )
+    orderItems.push({
+      productId: 'fakeId', // string crua
+      quantity: 10,
+      unitPrice: 1000
+    })
 
     const result = await sut.execute({
       customerId : customer.id.toString(),
@@ -161,13 +157,11 @@ describe("Register Order Unit Tests", () => {
       inMemoryProductsRepository.items.push(product)
   
       const orderItems = []
-      orderItems.push(
-        OrderItem.create({
-          productId: product.id,
-          quantity: 100,
-          unitPrice: 1000
-        }),
-      )
+      orderItems.push({
+        productId: product.id.toString(),
+        quantity: 30,
+        unitPrice: 1000
+      })
   
       const result = await sut.execute({
         customerId : customer.id.toString(),

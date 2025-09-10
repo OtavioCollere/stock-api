@@ -103,13 +103,13 @@ export class Product extends AggregateRoot<ProductProps> {
   decreaseStock(productId : UniqueEntityID, quantity: number, userId: UniqueEntityID, reason?: string) {
     this.props.quantity -= quantity;
     this.touch()
-    this.addDomainEvent(new StockDecreasedEvent(productId, quantity, userId, reason,))
+    this.addDomainEvent(new StockDecreasedEvent(productId, userId, quantity, reason))
   }
 
   increaseStock(productId : UniqueEntityID, quantity: number, userId : UniqueEntityID, reason? : string){
     this.props.quantity += quantity;
     this.touch()
-    this.addDomainEvent(new StockIncreseadEvent(productId, userId, quantity, reason,))
+    this.addDomainEvent(new StockIncreseadEvent(productId, quantity, userId, reason,))
   }
 
   // ===================

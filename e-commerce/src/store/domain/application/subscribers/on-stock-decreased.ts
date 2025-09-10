@@ -4,6 +4,7 @@ import { StockDecreasedEvent } from "../../enterprise/events/stock-decreased-eve
 import { StockMovementRepository } from "../repositories/stock-movement-repository";
 import { StockMovement } from "../../enterprise/entities/stockMovement";
 
+
 export class OnStockDecreased implements EventHandler{
 
   constructor(

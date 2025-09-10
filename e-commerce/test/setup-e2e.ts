@@ -22,11 +22,10 @@ const schemaId = randomUUID();
 
 beforeAll(async () => {
   const databaseUrl = generateUniqueDatabaseURL(schemaId)
-
   process.env.DATABASE_URL = databaseUrl
 
-  execSync("pnpm prisma db push");
-})
+  execSync("pnpm prisma db push", { stdio: "inherit" });
+}, 60_000);
 
 afterAll(async () => {
   await prisma.$executeRawUnsafe(`DROP SCHEMA IF EXISTS "${schemaId}" CASCADE;`);

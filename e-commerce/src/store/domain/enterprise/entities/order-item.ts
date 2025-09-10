@@ -7,7 +7,7 @@ export interface OrderItemProps {
   productId: UniqueEntityID
   quantity: number
   unitPrice: number
-  subTotal: number
+  subTotal : number
   createdAt?: Date
   updatedAt?: Date
 }
@@ -41,8 +41,7 @@ export class OrderItem extends Entity<OrderItemProps> {
     return this.props.unitPrice
   }
 
-
-  get subTotal(): number  {
+  get subTotal(): number   {
     return this.props.subTotal
   }
 

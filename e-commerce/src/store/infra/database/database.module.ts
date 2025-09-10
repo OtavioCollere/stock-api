@@ -16,6 +16,7 @@ import { PrismaStockMovementRepository } from "./prisma/repositories/prisma-stoc
     {provide : ProductsRepository, useClass : PrismaProductsRepository},
     {provide : CategoriesRepository, useClass : PrismaCategoriesRepository},
     {provide : StockMovementRepository, useClass : PrismaStockMovementRepository},
+    // {provide : orderepo, useClass : PrismaStockMovementRepository},
   ],
   exports : [PrismaService,
     UsersRepository,
