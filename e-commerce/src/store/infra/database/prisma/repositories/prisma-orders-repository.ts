@@ -1,14 +1,45 @@
-import type { OrdersRepository } from "@/store/domain/application/repositories/orders-repository";
-import type { Order } from "@/store/domain/enterprise/entities/order";
+import { OrdersRepository } from "@/store/domain/application/repositories/orders-repository";
+import { Order } from "@/store/domain/enterprise/entities/order";
+import { PrismaService } from "../../prisma.service";
+import { PrismaOrdersMapper } from "../mappers/prisma-orders-mapper";
 
 export class PrismaOrdersRepository implements OrdersRepository{
-  create(order: Order): Promise<Order> {
-    throw new Error("Method not implemented.");
+  constructor(
+    private prismaService : PrismaService
+  ) {}
+
+  async create(order: Order): Promise<Order> {
+    const data = PrismaOrdersMapper.toPrisma(order)
+  
+    await this.prismaService.order.create({ data })
+  
+    return order
   }
-  save(order: Order): Promise<Order> {
-    throw new Error("Method not implemented.");
+
+  async save(order: Order): Promise<Order> {
+    const data = PrismaOrdersMapper.toPrisma(order)
+
+    this.prismaService.order.update({
+      where : {
+        id : data.id
+      },
+      data 
+    })
+
+    return order;
   }
-  findById(id: string): Promise<Order | null> {
-    throw new Error("Method not implemented.");
+
+  async findById(id: string): Promise<Order | null> {
+    const order = await this.prismaService.order.findUnique({
+      where : {
+        id : id
+      },
+      include : {orderItems : true}
+    })
+
+    if (!order) return null
+
+    return PrismaOrdersMapper.toDomain(order);
   }
+
 }

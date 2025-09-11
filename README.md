@@ -1,5 +1,29 @@
 # Stock API
 
+Estrutura sugerida para o README
+
+Visão geral: explicar stack (NestJS, DDD, Clean Architecture, PostgreSQL, etc).
+
+Casos de uso de destaque:
+
+🔹 Controle de estoque (increase/decrease quantity com domain events)
+
+🔹 Registro de usuário com validação externa de CPF
+
+🔹 Autenticação JWT RS256
+
+🔹 Registro de pedidos integrando com estoque
+
+Testes:
+
+e2e sem mock (batendo no banco real)
+
+unitários com repositórios em memória
+
+Arquitetura: domain events, gateways, repositórios.
+
+-------------------------------------------------------- x ---------------------------------------------
+
 Este é um projeto em desenvolvimento que visa criar uma API para Controle de estoque utilizando **NestJS**, **JWT**, **Google e integração com o Governo**, seguindo práticas modernas de **Arquitetura Limpa**, **DDD** e **Microserviços**.
 
 ## Funcionalidades Implementadas
