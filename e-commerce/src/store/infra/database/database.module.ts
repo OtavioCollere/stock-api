@@ -8,6 +8,10 @@ import { CategoriesRepository } from "@/store/domain/application/repositories/ca
 import { PrismaCategoriesRepository } from "./prisma/repositories/prisma-categories-repository";
 import { StockMovementRepository } from "@/store/domain/application/repositories/stock-movement-repository";
 import { PrismaStockMovementRepository } from "./prisma/repositories/prisma-stock-movement.repository";
+import { OrdersRepository } from "@/store/domain/application/repositories/orders-repository";
+import { PrismaOrdersRepository } from "./prisma/repositories/prisma-orders-repository";
+import { OrderItemsRepository } from "@/store/domain/application/repositories/order-item-repository";
+import { PrismaOrderItemsRepository } from "./prisma/repositories/prisma-order-items-repository";
 
 @Module({
   providers : [
@@ -16,13 +20,15 @@ import { PrismaStockMovementRepository } from "./prisma/repositories/prisma-stoc
     {provide : ProductsRepository, useClass : PrismaProductsRepository},
     {provide : CategoriesRepository, useClass : PrismaCategoriesRepository},
     {provide : StockMovementRepository, useClass : PrismaStockMovementRepository},
-    // {provide : orderepo, useClass : PrismaStockMovementRepository},
+    {provide : OrdersRepository, useClass : PrismaOrdersRepository},
+    {provide : OrderItemsRepository, useClass : PrismaOrderItemsRepository},
   ],
   exports : [PrismaService,
     UsersRepository,
     ProductsRepository,
     CategoriesRepository,
-    StockMovementRepository
+    StockMovementRepository,
+    OrdersRepository
   ],
 })
 export class DatabaseModule{}

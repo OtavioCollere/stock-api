@@ -1,7 +1,11 @@
 import { UniqueEntityID } from "@/store/core/entities/unique-entity-id";
 import { Order } from "@/store/domain/enterprise/entities/order";
 import { Order as PrismaOrder, type OrderItem, type Prisma } from "@prisma/client";
+<<<<<<< HEAD
 import { PrismaOrderItemMapper } from "./prima-order-item-mapper";
+=======
+import { PrismaOrderItemMapper } from "./prisma-order-item-mapper";
+>>>>>>> efe5248c489bd7aaf11ea999df1b3f50364384a1
 
 export type PrismaOrderWithItems = PrismaOrder & { orderItems: OrderItem[] }
 
