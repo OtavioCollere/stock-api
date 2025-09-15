@@ -2,6 +2,7 @@ import { AggregateRoot } from "@/store/core/entities/aggregate-root";
 import { UniqueEntityID } from "@/store/core/entities/unique-entity-id";
 import { OrderItem } from "./order-item";
 import { Optional } from "@/store/core/types/optional"
+import { OrderRegisteredEvent } from "../events/order-registered.event";
 
 
 export interface OrderProps {
@@ -25,6 +26,8 @@ export class Order extends AggregateRoot<OrderProps> {
       status: props.status ?? 'PENDING',
       createdAt: props.createdAt ?? new Date(),
     }, id)
+
+    order.addDomainEvent(new OrderRegisteredEvent(order.id, props.totalAmount, 'BRL'))
 
     return order
   }

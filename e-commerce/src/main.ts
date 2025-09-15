@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ConfigService } from '@nestjs/config';
 import { EnvService } from './store/infra/env/env.service';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -27,8 +27,23 @@ async function bootstrap() {
   )
   .build();
 
-const documentFactory = () => SwaggerModule.createDocument(app, config);
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
 SwaggerModule.setup('api', app, documentFactory);
+
+  app.connectMicroservice<MicroserviceOptions>({
+    transport : Transport.KAFKA,
+    options : {
+      client : {
+        clientId : 'ecommerce-ms',
+        brokers : ['localhost:9092']
+      },
+      consumer: {
+        groupId : 'ecommerce-cs'
+      }
+    }
+  })
+  
+
   await app.listen(port);
 }
 bootstrap();
